@@ -78,8 +78,35 @@ namespace dotnet_test {
 # Please raise a PR to add code sample
   {{< / code-panel >}}
   {{< code-panel language="javascript" >}}
-// Please raise a PR to add code sample  
-  {{< / code-panel >}}
+require('chromedriver');
+const { Builder, By, Key, until } = require('selenium-webdriver');
+
+class GeoLocaiton {
+    constructor(latitude, longitude, accuracy) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
+    }
+}
+
+var geoLocaiton = new GeoLocaiton(35.689487, 139.691706, 100);
+
+(async function test() {
+    let driver = await new Builder()
+        .forBrowser('chrome')
+        .build();
+    try {
+        await driver.sendDevToolsCommand("Emulation.setGeolocationOverride", geoLocaiton);
+        await driver.get('https://browserleaks.com/geo');
+        await driver.wait(until.elementLocated(By.id('latitude')))
+    } catch (error) {
+        console.log('Oopsie')
+        throw error
+    }
+    finally {
+        await driver.quit();
+    }
+})().catch(e => { console.error(e) });  {{< / code-panel >}}
   {{< code-panel language="kotlin" >}}
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.devtools.DevTools
